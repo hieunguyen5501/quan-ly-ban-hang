@@ -1,6 +1,8 @@
 <?php
 require('database/connect.php');
 require('database/query.php');
+
+phpinfo();
 ?>
 <!DOCTYPE html>
 <html>
@@ -43,6 +45,14 @@ require('database/query.php');
 				
 				case 'list_product':
 					require('page/product/index.php');
+					break;
+				
+				case 'delete_product':
+					require('page/product/delete.php');
+					break;
+				
+				case 'edit_product':
+					require('page/product/edit.php');
 					break;
 				
 

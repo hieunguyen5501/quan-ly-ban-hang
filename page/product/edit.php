@@ -1,60 +1,71 @@
 <?php
-if (isset($_GET['id'])) {
-	$id = (int)$_GET['id'];
+if ($_GET['id']) {
+	$id = (int) $_GET['id'];
 
-	$sql = "SELECT * FROM category where id = $id";
-	$result = mysqli_fetch_assoc($conn->query($sql));
+	$sqlPro = "SELECT * FROM product WHERE id = $id";
 
-	if (isset($_POST['update'])) {
-		if (empty($_POST['cat_name'])) {
-			echo 'Khong duoc de trong ten';
-		} else {
-			$cat_name = $_POST['cat_name'];
-			$cat_status = $_POST['cat_status'];
-			$date = date("Y-m-d h:i:sa");
+	$product = $conn->query($sqlPro)->fetch_assoc();
+}
 
-			$sql = "UPDATE category SET cat_name = '$cat_name', cat_status = $cat_status, date_create = '$date' WHERE id = $id";
+if (isset($_POST['create_product'])) {
+	
+	$pro_name = $_POST['pro_name'];
+	$pro_price = $_POST['pro_price'];
+	$pro_desc = $_POST['pro_desc'];
 
-			if ($conn->query($sql) === TRUE) {
-			    $sql = "SELECT * FROM category where id = $id";
-				$result = mysqli_fetch_assoc($conn->query($sql));
-			} else {
-			    echo "Error: " . $sql . "<br>" . $conn->error;
-			}
+	$date_create = date("Y-m-d h:i:sa");
 
+	$cat_id = $_POST['cat_id'];
+
+	$pro_status = $_POST['pro_status'];
+
+	$file_image = $_FILES['pro_image'];
+
+	$name_image = isset($product['pro_image']) ? $product['pro_image'] : "";
+
+	if (isset($file_image)) {
+		if (file_exists("upload/" .$name_image)) {
+			unlink("upload/" .$name_image);
 		}
+
+		if ($file_image['type'] == 'image/jpeg' || $file_image['type'] == 'image/png'  || $file_image['type'] == 'image/jpg' || $file_image['type'] == 'image/gif') {
+			$ext = pathinfo($file_image['name'])['extension'];
+			$name_image = md5(time()) .'.' .$ext;
+
+			move_uploaded_file($_FILES["pro_image"]["tmp_name"], "upload/$name_image");
+		}
+
+	}
+
+	$sqlUpdate = update_product($cat_id, $pro_name, $pro_price, $pro_desc, $pro_status, $name_image, $date_create, $id);
+
+	if ($conn->query($sqlUpdate) === true) {
+		echo "Update product success";
+		header('Location: '."?page=edit_product&id=$id");
+	} else {
+		echo "Update product errors";
+		header('Location: '."?page=edit_product&id=$id");
 	}
 
 }
-
-
+$sqlCat = select_all('category');
+$resultCat = $conn->query($sqlCat);
 ?>
-<form action="" method="POST" class="form-horizontal" role="form">
-		<div class="form-group">
-			<legend>Edit Category</legend>
-		</div>
-		<div class="form-group">
-      		<label class="control-label col-sm-2" for="cat_name">Name:</label>
-	      	<div class="col-sm-10">
-	        	<input type="text" class="form-control" id="cat_name" placeholder="Enter Name" name="cat_name" value="<?php echo $result['cat_name'] ?>">
-	      	</div>
-	    </div>
-		<div class="form-group">
-      		<label class="control-label col-sm-2" for="name">Status:</label>
-	      	<div class="col-sm-10">
-	        	<select name="cat_status" class="form-control" id="cat_status">
-			    	
-					<option value="1" <?php echo $result['cat_status'] == 1 ? 'selected' : '' ?>>Hien</option>
-			    	<option value="0" <?php echo $result['cat_status'] == 0 ? 'selected' : '' ?> >An</option>
-				   
-			    </select>
-	      	</div>
-	    </div>
 
+<?php
+require('form.php');
+?>
 
-		<div class="form-group">
-			<div class="col-sm-10 col-sm-offset-2">
-				<button type="submit" name="update" class="btn btn-primary">Submit</button>
-			</div>
-		</div>
-</form>
+<script>
+	$('document').ready(function () {
+	    $("#pro_image").change(function () {
+	        if (this.files && this.files[0]) {
+	            var reader = new FileReader();
+	            reader.onload = function (e) {
+	                $('#imgshow').attr('src', e.target.result);
+	            }
+	            reader.readAsDataURL(this.files[0]);
+	        }
+	    });
+    });
+</script>

@@ -33,74 +33,14 @@ if (isset($_POST['create_product'])) {
 		echo "Add product errors";
 	}
 
-	
 }
 $sqlCat = select_all('category');
 $resultCat = $conn->query($sqlCat);
 ?>
-<form action="" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
-		<div class="form-group">
-			<legend>Create Category</legend>
-		</div>
-		<div class="form-group">
-      		<label class="control-label col-sm-2" for="pro_name">Name:</label>
-	      	<div class="col-sm-10">
-	        	<input type="text" class="form-control" id="pro_name" placeholder="Enter Name" name="pro_name">
-	      	</div>
-	    </div>
-	    <div class="form-group">
-      		<label class="control-label col-sm-2" for="pro_price">Price:</label>
-	      	<div class="col-sm-10">
-	        	<input type="text" class="form-control" id="pro_price" placeholder="Enter price" name="pro_price">
-	      	</div>
-	    </div>
-	    <div class="form-group">
-      		<label class="control-label col-sm-2" for="pro_desc">Description:</label>
-	      	<div class="col-sm-10">
-	        	<textarea type="text" class="form-control" id="pro_desc" placeholder="Enter description" name="pro_desc">
 
-	        	</textarea>
-	      	</div>
-	    </div>
-	    <div class="form-group">
-      		<label class="control-label col-sm-2" for="pro_image">Image:</label>
-	      	<div class="col-sm-10">
-	        	<input type="file" class="form-control" id="pro_image" placeholder="" name="pro_image">
-	        	<img style="width: 300px" src="" alt="" id="imgshow">
-	      	</div>
-	    </div>
-
-		<div class="form-group">
-      		<label class="control-label col-sm-2" for="name">Status:</label>
-	      	<div class="col-sm-10">
-	        	<select name="pro_status" class="form-control" id="pro_status">
-			    	<option value="1">Hien</option>
-			    	<option value="0">An</option>
-			    </select>
-	      	</div>
-	    </div>
-
-		<div class="form-group">
-      		<label class="control-label col-sm-2" for="cat_id">Category :</label>
-	      	<div class="col-sm-10">
-	        	<select name="cat_id" class="form-control" id="cat_id">
-			    	<?php
-			    	while ($row = $resultCat->fetch_assoc()) {
-		    	    ?>
-					<option value="<?php echo $row['id'] ?>"><?php echo $row['cat_name'] ?></option>
-		    	    <?php
-			    	}
-			    	?>
-			    </select>
-	      	</div>
-	    </div>
-		
-		<div class="form-group">
-			<div class="col-sm-10 col-sm-offset-2">
-				<button type="submit" name="create_product" class="btn btn-primary">Submit</button>
-			</div>
-		</div>
-</form>
+<?php
+require('form.php');
+?>
 
 <script>
 	$('document').ready(function () {

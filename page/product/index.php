@@ -1,6 +1,7 @@
 <?php
-$sql = select_all('product');
+$sql = select_product();
 $result = $conn->query($sql);
+
 ?>
 <table class="table table-hover">
 	<thead>
@@ -8,6 +9,7 @@ $result = $conn->query($sql);
 			<th>ID</th>
 			<th>Name</th>
 			<th>Image</th>
+			<th>Category</th>
 			<th>Price</th>
 			<th>Description</th>
 			<th>Status</th>
@@ -23,18 +25,19 @@ $result = $conn->query($sql);
 
 		
 		<tr>
-			<td><?php echo $row['id']; ?></td>
+			<td><?php echo $row['pro_id']; ?></td>
 			<td><?php echo $row['pro_name']; ?></td>
 			<td>
 				<img style="width: 200px" src="upload/<?php echo $row['pro_image'] ?>" alt="">
 			</td>
+			<td><?php echo $row['cat_name']; ?></td>
 			<td><?php echo number_format($row['pro_price']); ?> d</td>
 			<td><?php echo $row['pro_desc']; ?></td>
 			<td><?php echo $row['pro_status'] == 1 ? "Hien" : "An" ?></td>
 			<td><?php echo date_format(date_create($row['date_create']), "Y/m/d");; ?></td>
 			<td>
-				<a href="?page=edit_category&id=<?php echo $row['id'];  ?>">Edit</a>
-				<a href="?page=delete_category&id=<?php echo $row['id'];  ?>">Delete</a>
+				<a href="?page=edit_product&id=<?php echo $row['pro_id'];  ?>">Edit</a>
+				<a onclick="return confirm('Ban chac chan muon xoa')" href="?page=delete_product&id=<?php echo $row['pro_id'];  ?>">Delete</a>
 			</td>
 		</tr>
 
